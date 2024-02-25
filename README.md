@@ -46,9 +46,10 @@ yarn build
 ```
 
 ## Архитектура
-
 В проекте используется шаблон проектирования MVP.
 Так как наше приложение небольшое, представление(Presenter) будет реализован в index.ts
+![схема uml](https://private-user-images.githubusercontent.com/65623244/307610362-a03e6987-a74e-40d3-9364-fb144d4f9dbc.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDg4ODI1ODAsIm5iZiI6MTcwODg4MjI4MCwicGF0aCI6Ii82NTYyMzI0NC8zMDc2MTAzNjItYTAzZTY5ODctYTc0ZS00MGQzLTkzNjQtZmIxNDRkNGY5ZGJjLmpwZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAyMjUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMjI1VDE3MzEyMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTMwNWU1MWY0ODdmNTUzOTAwOWE0YTUyNjc1MDM2ZmI2NDBkZmZhYjY5YzBiZmM4NmQwZjRlYTNjOTkzYzkyYmQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.GmJ_EuPQei2cWPG9Mh7R_qP2n4QtpdCCEN97DEk5XDQ)
+
 
 ### Описание данных
 * Интерфейс состояния приложения
@@ -189,21 +190,18 @@ export interface IPage {
    События: modal:open, modal:close, basket:changed-item
 
 7. **Класс PopupWithCartUI**   
-   Дочерний класс от Modal.
    Отображает элементы товара в полном объеме( интерфейс IProductCard) + кнопку "Купить".
    Если цена null, то Кнопка "Купить" не активна.
    При клике на кнопку "Купить" генерируется событие basket:changed-item, Текст кнопки меняется на "Удалить из корзины" и обновляется цифра на иконке корзины.
    При клике на кнопку "Удалить из корзины" генерируется событие basket:changed-item, Текст кнопки меняется на "Купить" и обновляется цифра на иконке корзины.
 
 8. **Класс PopupOrderUI**  
-   Дочерний класс от Modal.
    Отображает элементы корзины: список товаров(название и цена), иконка удаления корзины у каждого товара, кнопка Оформить и итоговая цена заказа.
    Если товаров в корзине нет, то отображается текст "Вы еще не добавили ни одного товара", кнопка Оформить не активна, общая цена 0.
    При клике на иконку удаления корзины генерируется событие basket:changed-item,, товар удаляется из корзины и обновляется цифра на иконке корзины.
    При клике на кнопку "Оформить" генерируется событие basket:create-order, модальное окно закрывается и открывается первое окно оформления товара.
 
 9. **Класс PopupOrderDeliveryUI**  
-   Дочерний класс от Modal.
    Отображает элементы формы выбора способа оплаты и адрес.
    Содержит кнопку Далее(изначально не активна).
    Когда все обязательные поля формы заполнены и прошли валидацию, то кнопки становятся активными.
@@ -211,15 +209,13 @@ export interface IPage {
    
 
 10. **Класс PopupOrderContactsUI**  
-   Дочерний класс от Modal.
    Отображает элементы формы ввода телефона и email.
    Содержит кнопку Оформить(изначально не активна).
    Когда все обязательные поля формы заполнены и прошли валидацию, то кнопки становятся активными order:valid-check.
    При нажатии на кнопку "Оформить" генерируется событие order:submit, оркно закрывается, корзина очищается. 
 
 10. **Класс PopupOrderStatusUI**  
-    Дочерний класс от Modal.
-    Отображает текст со статусом заказа, номером и списаной суммы
+    Отображает информацию со статусом заказа, номером и списанной суммы
 
 ## Описание событий
 
