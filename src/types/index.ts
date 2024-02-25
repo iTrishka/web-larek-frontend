@@ -1,4 +1,13 @@
-// У карточки продукта 3 варианта отображения c разным набором свойств(в галерее, карточке товара, корзине).
+interface IAppState {
+  catalog: {
+    total: number;
+    items: IProductCard[];
+  };
+  preview: IProductCard;
+  order: IOrder;
+  loading: boolean;
+}
+
 export interface IProductCard {
   id: string;
   title: string;
@@ -8,31 +17,28 @@ export interface IProductCard {
   price: number | null;
 };
 
-export type IPaymenOption  = 'cash' | 'card';
-
-export interface IProfile {
-  payment: IPaymenOption;
-  address: string;
-  phone: string;
-  email: string;
-}
-
 export type ICatalogItem = Omit<IProductCard, 'description'>;
 
-export type ICart= {
+export type IBasket= {
   item: Pick<IProductCard, 'id' | 'title' | 'price'>[]
   total: number
 };
 
-export type IOrder = IProfile & {
+export type IPaymenOption  = 'cash' | 'card';
+
+export interface IOrder {
+  payment: IPaymenOption;
+  address: string;
+  phone: string;
+  email: string;  
   total: number;
-  items: string[]
+  items: string[];
 };
 
 export interface IPage {
-  amountItems: number;
-  catalog: ICatalogItem;
-  loading: boolean
-}
+  counterBasket: number;
+  catalog: ICatalogItem[];
+  locked: boolean;
+};
 
 
