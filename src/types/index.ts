@@ -6,7 +6,7 @@ interface IAppState {
   preview: IProductCard;
   order: IOrder;
   loading: boolean;
-}
+};
 
 export interface IProductCard {
   id: string;
@@ -20,8 +20,8 @@ export interface IProductCard {
 export type ICatalogItem = Omit<IProductCard, 'description'>;
 
 export type IBasket= {
-  item: Pick<IProductCard, 'id' | 'title' | 'price'>[]
-  total: number
+  item: Pick<IProductCard, 'id' | 'title' | 'price'>[];
+  total: number;
 };
 
 export type IPaymenOption  = 'cash' | 'card';
@@ -35,10 +35,17 @@ export interface IOrder {
   items: string[];
 };
 
+export type IOrderDelivery = Pick<IOrder, 'payment' | 'address'>;
+
+export type IOrderContacts = Pick<IOrder, 'phone' | 'email'>;
+
+export interface IOrderStatus = {
+  id: string;
+  total: number;
+};
+
 export interface IPage {
   counterBasket: number;
   catalog: ICatalogItem[];
   locked: boolean;
 };
-
-
