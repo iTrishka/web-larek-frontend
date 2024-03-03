@@ -174,7 +174,7 @@ export interface IPage {
 
 ### Базовые классы
 
-1. #### **<mark  style="background-color: #e8e8e8">Класс Component<T></mark>**  
+1. #### **Класс Component<T>**  
    Абстрактный базовый класс для компонентов, который содержит инструментарий для работы с DOM в дочерних компонентах.  
    __Конструктор:__:  
    Аргументом конструктора служит HTMLElement.  
@@ -184,7 +184,7 @@ export interface IPage {
    - _setText_ - установка текстового содержимого;
    - _show, hide_ - скрыть/показать элемент.
 
-2. #### **<mark  style="background-color: #e8e8e8">Класс Model<T></mark>**  
+2. #### **Класс Model<T>**  
    Абстрактный базовый класс, чтобы можно было отличить ее от простых объектов с данными.  
    __Конструктор:__:  
    Аргументы: исходные данные, которые будут установлены в класс и события  
@@ -193,7 +193,7 @@ export interface IPage {
    - _emitChanges_ - уведомляет о событиях и связанных с ними изменениями;  
 
 ### Слой Модели данных
-1. #### **<mark  style="background-color: #f6f1c6">Класс AppState extend Model implements IAppState.</mark>** 
+1. #### **Класс AppState extend Model implements IAppState.** 
 Класс описывает состояние приложения.  
 __Методы класса__:
    - _setCatalog(IProductCard[]): void_ // метод, который записывает список товаров, пришедших с сервера в  AppState.catalog
@@ -207,14 +207,14 @@ __Методы класса__:
 
 ### Слой Presenter
 
-1. #### **<mark  style="background-color: #a9fae978">Класс Api</mark>**  
+1. #### **Класс Api**  
    Класc для работы с api.  
    __Методы класса__:
    - _handleResponse_ // обработка ответа с сервера;
    - _get_ // выполнение GET запроса;
    - _post_ // выполнение POST запроса;
 
-2. #### **<mark  style="background-color: #a9fae978">Класс EventEmitter</mark>**   
+2. #### **Класс EventEmitter**   
    Реализует паттерн «Наблюдатель» и позволяет подписываться на события и уведомлять подписчиков о наступлении события.  
    __Методы класса__:
 
@@ -224,13 +224,13 @@ __Методы класса__:
 
 ### Слой View - Компоненты представления
 
-1. #### **<mark  style="background-color: #a9c7fa45">Класс Modal extends Component</mark>**    
+1. #### **Класс Modal extends Component**    
    Универсальный класс для работы с модальными окнами.  
    Конструктор принимает в качестве аргумента селектор интересующего нас модального окна.   
    __Методы класса__:  
    - _open, close_ - открытие и закрытие модального окна.
 
-2. #### **<mark  style="background-color: #a9c7fa45">Класс Form extends Component</mark>**      
+2. #### **Класс Form extends Component**      
    Универсальный класс для работы с формами.  
    Принимает в конструкторе селектор конкретной формы.  
    __Методы класса__:
@@ -238,46 +238,46 @@ __Методы класса__:
    - _set valid_ // активация/деактивация кнопки формы
    - _set errors_ // установка текста ошибки валидации  
 
-3. #### **<mark  style="background-color: #a9c7fa45">Класс PageUI extends Component implements IPage</mark>**      
+3. #### **Класс PageUI extends Component implements IPage**      
    Выводит в контейнере галерею товаров, работает со счетчиком корзины в хэдере и отвечает за блокировку экрана при вызове модального окна.  
    __Методы класса__:
    - _set catalog(ICatalogItem[])_ // отрисовка карточек товара.
    - _set counter(number)_ //установка цифры в счетчике товаров на иконке корзины.
    - _set locked(boolean)_ // блокировка скролла
 
-4. #### **<mark  style="background-color: #a9c7fa45">Класс CardUI extends Component implements IProductCard.</mark>**    
+4. #### **Класс CardUI extends Component implements IProductCard.**    
   Класс для отображения карточки товара.
 
-6. #### **<mark  style="background-color: #a9c7fa45">Класс CatalogItemUI extends CardUI implements ICatalogItem.</mark>**     
+6. #### **Класс CatalogItemUI extends CardUI implements ICatalogItem.**     
    Элемент галереи.  
    События: modal:open, modal:close, basket:changed-item  
 
-7. #### **<mark  style="background-color: #a9c7fa45">Класс PopupWithCartUI extends Modal, CardUI implements IProductCard.</mark>**      
+7. #### **Класс PopupWithCartUI extends Modal, CardUI implements IProductCard.**      
    Отображает элементы товара в полном объеме + кнопку "Купить".
    Если цена null, то Кнопка "Купить" не активна.
    При клике на кнопку "Купить" генерируется событие basket:changed-item, Текст кнопки меняется на "Удалить из корзины" и обновляется цифра на иконке корзины.
    При клике на кнопку "Удалить из корзины" генерируется событие basket:changed-item, Текст кнопки меняется на "Купить" и обновляется цифра на иконке корзины.
 
-8. #### **<mark  style="background-color: #a9c7fa45">Класс PopupBasketUI extends Modal implements IBasket.</mark>**     
+8. #### **Класс PopupBasketUI extends Modal implements IBasket.**     
    Отображает элементы корзины: список товаров(название и цена), иконка удаления корзины у каждого товара, кнопка Оформить и итоговая цена заказа.  
    Если товаров в корзине нет, то отображается текст "Вы еще не добавили ни одного товара", кнопка Оформить не активна, общая цена 0.
    При клике на иконку удаления корзины генерируется событие basket:changed-item,, товар удаляется из корзины и обновляется цифра на иконке корзины.  
    При клике на кнопку "Оформить" генерируется событие basket:create-order, модальное окно закрывается и открывается первое окно оформления товара.
 
-9. #### **<mark  style="background-color: #a9c7fa45">Класс PopupOrderDeliveryUI extends Modal, Form implements IOrderDelivery.</mark>**      
+9. #### **Класс PopupOrderDeliveryUI extends Modal, Form implements IOrderDelivery.**      
    Отображает элементы формы выбора способа оплаты и адрес.
    Содержит кнопку Далее(изначально не активна).
    Когда все обязательные поля формы заполнены и прошли валидацию, то кнопки становятся активными.
    При нажатии на кнопку "Далее" генерируется событие order:valid-check, закрывается текущее модальное окно и открывается следующий шаг.
    
 
-10. #### **<mark  style="background-color: #a9c7fa45">Класс PopupOrderContactsUI extends Modal, Form implements IOrderContacts.</mark>**      
+10. #### **Класс PopupOrderContactsUI extends Modal, Form implements IOrderContacts.**      
    Отображает элементы формы ввода телефона и email.
    Содержит кнопку Оформить(изначально не активна).
    Когда все обязательные поля формы заполнены и прошли валидацию, то кнопки становятся активными order:valid-check.
    При нажатии на кнопку "Оформить" генерируется событие order:submit, оркно закрывается, корзина очищается. 
 
-10. #### **<mark  style="background-color: #a9c7fa45">Класс PopupOrderStatusUI extends Modal implements IOrderStatus.</mark>**     
+10. #### **Класс PopupOrderStatusUI extends Modal implements IOrderStatus.**     
    Наследуется от класса Modal.
    Отображает информацию со статусом заказа, номером и списанной суммы.
    __Методы класса__:
