@@ -1,14 +1,10 @@
 export interface IAppState {
   catalog: IProductCard[];
+  basket: IBasket[];
   preview: IProductCard;
   order: IOrder;
   loading: boolean;
 };
-
-// export interface ICatalog {
-//   total: number;
-//   items: IProductCard;
-// }
 
 export interface IProductCard {
   id: string;
@@ -16,13 +12,14 @@ export interface IProductCard {
   description: string;
   image: string;
   category: string;
-  price: string | null;
+  price: number | null;
 };
 
 export type ICatalogItem = Omit<IProductCard, 'description' | 'id'>;
+export type IBasketCard = Pick<IProductCard, 'title' | 'price'>[];
 
 export type IBasket= {
-  item: Pick<IProductCard, 'id' | 'title' | 'price'>[];
+  items: IProductCard[];
   total: number;
 };
 

@@ -8,7 +8,9 @@ import {AppState} from "./components/AppState";
 import {Page} from "./components/common/Page";
 import {Modal} from "./components/common/Modal";
 import {Model} from "./components/base/Model";
-import {CatalogItem, CatalogChangeEvent} from "./components/Card";
+import {CatalogItem, CatalogChangeEvent, PreviewCard, BasketCard} from "./components/Card";
+import {Basket} from "./components/Basket";
+import { IProductCard } from './types';
 
 
 const events = new EventEmitter();
@@ -35,7 +37,8 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 
 
 // Переиспользуемые части интерфейса
-// const basket = new Basket(cloneTemplate(basketTemplate), events);
+// const preview = new PreviewCard(cloneTemplate(cardPreviewTemplate), events);
+const basket = new Basket(cloneTemplate(basketTemplate), events);
 // const order = new Order(cloneTemplate(orderTemplate), events);
 
 //___________ Бизнес-логика__________________//
@@ -48,10 +51,10 @@ api.getCardsList()
   });
 
 // Изменились элементы каталога
-events.on<CatalogChangeEvent>('event ', () => {
+events.on<CatalogChangeEvent>('items:changed', () => {
   page.catalog = appData.catalog.map(item => {
       const card = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
-          onClick: () => events.emit('card:modal', item)
+          onClick: () => events.emit('preview:open', item)
       });
       return card.render({
         title: item.title,
@@ -62,17 +65,28 @@ events.on<CatalogChangeEvent>('event ', () => {
   });
 });
 
+
 // Открыть превью товара
-events.on('order:open', () => {
+events.on('preview:open', (item: IProductCard) => {
+  const isInOrder = appData.order.items.includes(item.id) ? true : false; 
+  const preview = new PreviewCard(cloneTemplate(cardPreviewTemplate), isInOrder, {
+    onClick: () => {
+      events.emit('order:changedItem', item);
+      events.emit('preview:open', item)
+    }
+  });
+  preview.changeButton();
   modal.render({
-      content: order.render({
-          phone: '',
-          email: '',
-          valid: false,
-          errors: []
+      content: preview.render({
+        title: item.title,
+        image: item.image,
+        category: item.category,
+        price: item.price
       })
   });
 });
+
+
 
 // Блокируем прокрутку страницы если открыта модалка
 events.on('modal:open', () => {
@@ -84,44 +98,43 @@ events.on('modal:close', () => {
   page.locked = false;
 });
 
+// изменился состав корзины
+events.on('order:changedItem', (item: IProductCard )=> {
+  appData.toggleOrderItems(item);
+  page.counter = appData.order.items.length;
+});
 
 
+//Открыть корзину
+events.on('basket:open', () => {
+  const items: HTMLElement[] = appData.order.items.map(id => {
+    const currentCard  = appData.catalog.filter(item => item.id === id)[0]; 
+    const cardBasket = new BasketCard(cloneTemplate(cardBasketTemplate), {
+      onClick: () => {
+        events.emit('order:changedItem', currentCard);
+        events.emit('basket:open', currentCard)
+      }
+    }) 
+    return cardBasket.render({
+      title: currentCard.title,
+      price: currentCard.price
+    })
+  })
+  modal.render({
+    content: basket.render({
+      items: items,
+      total: appData.getTotal()
+    })
+  });
+});
 
 
-
-
-
-
-// api.getCardsList();
-// api.sendOrder({
-//   "payment": 'cash',
-//   "address": '1 hhh',
-//   "phone": 'ddd',
-//   "email": 'aa',
-//   "total": 2200,
-//   "items": [
-//     "854cef69-976d-4c2a-a18c-2aa45046c390",
-//     "c101ab44-ed99-4a54-990d-47aa2bb4e7d9"
-//   ]
-// });
-
-
-// Изменились элементы каталога
-// events.on<CatalogChangeEvent>('items:changed', () => {
-//   page.catalog = appData.catalog.map(item => {
-//       const card = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
-//           onClick: () => events.emit('card:select', item)
-//       });
-//       return card.render({
-//           title: item.title,
-//           image: item.image,
-//           description: item.about,
-//           status: {
-//               status: item.status,
-//               label: item.statusLabel
-//           },
-//       });
-//   });
-
-//   page.counter = appData.getClosedLots().length;
-// });
+//Заказ: открываем окно с формой доставки
+events.on('orderDelivery:open',() => {
+  // const orderDelivery = new PreviewCard(cloneTemplate(cardPreviewTemplate), isInOrder, {
+  //   onClick: () => {
+  //     events.emit('order:changedItem', item);
+  //     events.emit('preview:open', item)
+  //   }
+  // });
+})
