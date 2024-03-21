@@ -88,31 +88,28 @@ interface IPreviewCardUI extends ICardUI {
 export class PreviewCard extends Card implements IPreviewCardUI{
   protected _description: HTMLElement;
   protected _button: HTMLElement;
-  protected _isInOrder: boolean;
+  protected _isInBasket: boolean;
 
-  constructor(container: HTMLElement, protected isInOrder: boolean, actions?: ICardActions) {
+  constructor(container: HTMLElement, isInBasket: boolean, actions?: ICardActions) {
     super('card', container);
     this._image = ensureElement<HTMLImageElement>(`.card__image`, container);
     this._category = ensureElement<HTMLImageElement>(`.card__category`, container);
     this._description = ensureElement<HTMLElement>(`.card__text`, container);
     this._button = this.container.querySelector('.card__button');
-    this._isInOrder = isInOrder
 
     if (actions?.onClick) {
       this._button.addEventListener('click', actions.onClick);
     }
+
+    this._isInBasket = isInBasket
   };
 
   changeButton(){
-    if(this._isInOrder){
+    if(this._isInBasket){
       this.setText(this._button!, "Удалить из корзины");
     } else {
       this.setText(this._button!, "В козину");
     }
-  }
-
-  disableButton(){
-    this._button.setAttribute("disabled", "true")
   }
 
   set price(value: number) {
@@ -120,7 +117,7 @@ export class PreviewCard extends Card implements IPreviewCardUI{
       this.setText(this._price!, `${value} синапсов`);
     } else {
       this.setText(this._price!, `Бесплатно`);
-      this.disableButton()
+      this.setDisabled(this._button, true)
     }
   };
 }

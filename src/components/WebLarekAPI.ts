@@ -7,18 +7,26 @@ export interface IWebLarekAPI {
 };
 
 export class WebLarekAPI extends Api implements IWebLarekAPI {
+    readonly cdn: string;
 
-    constructor(baseUrl: string, options?: RequestInit) {
+    constructor(baseUrl: string, cdn: string, options?: RequestInit) {
         super(baseUrl, options);
+        this.cdn = cdn;
     };
 
     getCardsList(): Promise<IProductCard[]> {
         return this.get('/product/')
-          .then((data: ApiListResponse<IProductCard>) => data.items)
+          .then((data: ApiListResponse<IProductCard>) =>  data.items.map((item) => ({
+            ...item,
+            image: this.cdn + item.image,
+            inBasket: false
+        })))
     };
 
     sendOrder(order: IOrder): Promise<IOrderResponse>{
         return this.post('/order', order)
             .then((data: IOrderResponse) => data)
     };
+
+   
 };

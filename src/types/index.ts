@@ -13,6 +13,7 @@ export interface IProductCard {
   image: string;
   category: string;
   price: number | null;
+  inBasket: boolean;
 };
 
 export type ICatalogItem = Omit<IProductCard, 'description' | 'id'>;
@@ -23,20 +24,31 @@ export type IBasket= {
   total: number;
 };
 
-export type IPaymenOption  = 'cash' | 'card';
+export type IPaymenOption  = 'cash' | 'card' | '';
 
-export interface IOrder {
+export interface IOrderForm {
   payment: IPaymenOption;
   address: string;
   phone: string;
   email: string;  
+};
+
+export interface IOrder extends IOrderForm{ 
   total: number;
   items: string[];
 };
 
-export type IOrderDelivery = Pick<IOrder, 'payment' | 'address'>;
+export interface IOrderDelivery {
+  // payment: IPaymenOption;
+  address: string;
+}
 
-export type IOrderContacts = Pick<IOrder, 'phone' | 'email'>;
+export interface IOrderContacts {
+  phone: string;
+  email: string; 
+}
+
+export type IOrderContactsw = Pick<IOrder, 'phone' | 'email'>;
 
 export interface IOrderResponse{
   id: string;
@@ -48,3 +60,10 @@ export interface IPage {
   catalog: ICatalogItem[];
   locked: boolean;
 };
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+
+export interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+}

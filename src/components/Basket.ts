@@ -22,7 +22,7 @@ export class Basket extends Component<IBasketUI> {
 
     if (this._button) {
         this._button.addEventListener('click', () => {
-            events.emit('order:open');
+            events.emit('orderDelivery:open');
         });
     }
   }
