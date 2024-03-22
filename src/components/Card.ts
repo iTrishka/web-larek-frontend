@@ -1,23 +1,16 @@
-import {Component} from "./base/Component";
+import { Component } from "./base/Component";
 import { ensureElement } from "../utils/utils";
-import {EventEmitter} from "./base/events";
-import { IProductCard, ICatalogItem } from "../types";
-
-interface ICardActions {
-  onClick: (event: MouseEvent) => void;
-}
-
-export type CatalogChangeEvent = {
-  catalog: ICatalogItem[]
-};
 
 export interface ICardUI {
   title: string;
   image: string;
   category: string;
   price: number | null;
-}
+};
 
+export interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+};
 
 export class Card extends Component<ICardUI> {
   protected _title: HTMLElement;
@@ -57,17 +50,11 @@ export class Card extends Component<ICardUI> {
       this.setText(this._price!, `${value} синапсов`);
     } else {
       this.setText(this._price!, `Бесплатно`);
-    }
+    };
   };
-
-}
-
-// interface ICatalogItemUI extends ICardUI {
-  
-// }
+};
 
 export class CatalogItem extends Card {
-
   constructor(container: HTMLElement, actions?: ICardActions) {
     super('card', container);
     this._image = ensureElement<HTMLImageElement>(`.card__image`, container);
@@ -77,20 +64,18 @@ export class CatalogItem extends Card {
       container.addEventListener('click', actions.onClick);
     };
   };
-}
-
+};
 
 interface IPreviewCardUI extends ICardUI {
   description: string;
-  // isInOrder: boolean;
-} 
+};
 
 export class PreviewCard extends Card implements IPreviewCardUI{
   protected _description: HTMLElement;
   protected _button: HTMLElement;
-  protected _isInBasket: boolean;
+  protected _inBasket: boolean;
 
-  constructor(container: HTMLElement, isInBasket: boolean, actions?: ICardActions) {
+  constructor(container: HTMLElement, protected inBasket: boolean, actions?: ICardActions) {
     super('card', container);
     this._image = ensureElement<HTMLImageElement>(`.card__image`, container);
     this._category = ensureElement<HTMLImageElement>(`.card__category`, container);
@@ -99,18 +84,18 @@ export class PreviewCard extends Card implements IPreviewCardUI{
 
     if (actions?.onClick) {
       this._button.addEventListener('click', actions.onClick);
-    }
+    };
 
-    this._isInBasket = isInBasket
+    this._inBasket = inBasket
   };
 
   changeButton(){
-    if(this._isInBasket){
+    if(this._inBasket){
       this.setText(this._button!, "Удалить из корзины");
     } else {
       this.setText(this._button!, "В козину");
-    }
-  }
+    };
+  };
 
   set price(value: number) {
     if(value){
@@ -118,14 +103,9 @@ export class PreviewCard extends Card implements IPreviewCardUI{
     } else {
       this.setText(this._price!, `Бесплатно`);
       this.setDisabled(this._button, true)
-    }
+    };
   };
-}
-
-
-interface IBasketCardUI extends ICardUI {
-
-} 
+};
 
 export class BasketCard extends Card {
   protected _button?: HTMLElement;
@@ -136,8 +116,6 @@ export class BasketCard extends Card {
 
     if (actions?.onClick) {
       this._button.addEventListener('click', actions.onClick);
-    }
+    };
   };
-
-
-}
+};

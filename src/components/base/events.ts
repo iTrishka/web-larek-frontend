@@ -11,7 +11,7 @@ export interface IEvents {
     on<T extends object>(event: EventName, callback: (data: T) => void): void;
     emit<T extends object>(event: string, data?: T): void;
     trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
-}
+};
 
 /**
  * Брокер событий, классическая реализация
@@ -23,7 +23,7 @@ export class EventEmitter implements IEvents {
 
     constructor() {
         this._events = new Map<EventName, Set<Subscriber>>();
-    }
+    };
 
     /**
      * Установить обработчик на событие
@@ -33,7 +33,7 @@ export class EventEmitter implements IEvents {
             this._events.set(eventName, new Set<Subscriber>());
         }
         this._events.get(eventName)?.add(callback);
-    }
+    };
 
     /**
      * Снять обработчик с события
@@ -43,9 +43,9 @@ export class EventEmitter implements IEvents {
             this._events.get(eventName)!.delete(callback);
             if (this._events.get(eventName)?.size === 0) {
                 this._events.delete(eventName);
-            }
-        }
-    }
+            };
+        };
+    };
 
     /**
      * Инициировать событие с данными
@@ -54,23 +54,23 @@ export class EventEmitter implements IEvents {
         this._events.forEach((subscribers, name) => {
             if (name instanceof RegExp && name.test(eventName) || name === eventName) {
                 subscribers.forEach(callback => callback(data));
-            }
+            };
         });
-    }
+    };
 
     /**
      * Слушать все события
      */
     onAll(callback: (event: EmitterEvent) => void) {
         this.on("*", callback);
-    }
+    };
 
     /**
      * Сбросить все обработчики
      */
     offAll() {
         this._events = new Map<string, Set<Subscriber>>();
-    }
+    };
 
     /**
      * Сделать коллбек триггер, генерирующий событие при вызове
@@ -82,6 +82,6 @@ export class EventEmitter implements IEvents {
                 ...(context || {})
             });
         };
-    }
-}
+    };
+};
 

@@ -16,7 +16,7 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
 
     getCardsList(): Promise<IProductCard[]> {
         return this.get('/product/')
-          .then((data: ApiListResponse<IProductCard>) =>  data.items.map((item) => ({
+          .then((data: ApiListResponse<IProductCard>) =>  data.items.map((item: IProductCard) => ({
             ...item,
             image: this.cdn + item.image,
             inBasket: false
@@ -26,7 +26,5 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
     sendOrder(order: IOrder): Promise<IOrderResponse>{
         return this.post('/order', order)
             .then((data: IOrderResponse) => data)
-    };
-
-   
+    };  
 };

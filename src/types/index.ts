@@ -1,10 +1,4 @@
-export interface IAppState {
-  catalog: IProductCard[];
-  basket: IBasket[];
-  preview: IProductCard;
-  order: IOrder;
-  loading: boolean;
-};
+import { paymenOption } from "../utils/constants";
 
 export interface IProductCard {
   id: string;
@@ -16,54 +10,24 @@ export interface IProductCard {
   inBasket: boolean;
 };
 
-export type ICatalogItem = Omit<IProductCard, 'description' | 'id'>;
-export type IBasketCard = Pick<IProductCard, 'title' | 'price'>[];
-
-export type IBasket= {
-  items: IProductCard[];
-  total: number;
-};
-
-export type IPaymenOption  = 'cash' | 'card' | '';
-
-export interface IOrderForm {
-  payment: IPaymenOption;
+export interface IOrder { 
+  payment: IPaymenOption | '';
   address: string;
   phone: string;
-  email: string;  
-};
-
-export interface IOrder extends IOrderForm{ 
+  email: string;
   total: number;
   items: string[];
 };
 
-export interface IOrderDelivery {
-  // payment: IPaymenOption;
-  address: string;
-}
+export type IPaymenOption  = paymenOption | '';
 
-export interface IOrderContacts {
-  phone: string;
-  email: string; 
-}
+export type IOrderDeliveryForm = Pick<IOrder, 'payment' | 'address'>;
 
-export type IOrderContactsw = Pick<IOrder, 'phone' | 'email'>;
+export type IOrderContactsForm = Pick<IOrder, 'phone' | 'email'>;
 
 export interface IOrderResponse{
   id: string;
   total: number;
 };
 
-export interface IPage {
-  counterBasket: number;
-  catalog: ICatalogItem[];
-  locked: boolean;
-};
 
-export type FormErrors = Partial<Record<keyof IOrder, string>>;
-
-
-export interface ICardActions {
-  onClick: (event: MouseEvent) => void;
-}

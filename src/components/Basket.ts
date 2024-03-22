@@ -1,11 +1,12 @@
 import {Component} from "./base/Component";
-import {cloneTemplate, createElement, ensureElement, formatNumber} from "../utils/utils";
-import { IBasketCard } from "../types";
+import {createElement, ensureElement, formatNumber} from "../utils/utils";
 import {EventEmitter} from './base/events';
+import { Event } from "../utils/constants";
 
 export type IBasketUI= {
   items: HTMLElement[] | [];
   total: number;
+  disableButton: void;
 };
 
 export class Basket extends Component<IBasketUI> {
@@ -22,14 +23,14 @@ export class Basket extends Component<IBasketUI> {
 
     if (this._button) {
         this._button.addEventListener('click', () => {
-            events.emit('orderDelivery:open');
+            events.emit(Event.FORM_DELIVERY_OPEN);
         });
-    }
-  }
+    };
+  };
 
   disableButton(value: string){
     this._button.setAttribute("disabled", value)
-  }
+  };
 
   set items(items: HTMLElement[]) {
     if (items.length) {
@@ -41,12 +42,10 @@ export class Basket extends Component<IBasketUI> {
             
         }));
         this.disableButton("true")
-    }
-  }
+    };
+  };
 
   set total(total: number) {
     this.setText(this._total, `${formatNumber(total)} синапсов`);
-  }
-
-
-}
+  };
+};

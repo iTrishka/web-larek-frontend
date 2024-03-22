@@ -1,19 +1,20 @@
-import {Form} from "./common/Form";
-import {IOrder} from "../types";
-import {EventEmitter, IEvents} from "./base/events";
-import { IPaymenOption, IOrderDelivery, ICardActions } from "../types";
-import {ensureElement} from "../utils/utils";
-import { paymenOption } from "../utils/constants";
+import { Form } from "./common/Form";
+import { IOrderDeliveryForm, IOrderContactsForm } from "../types";
+import { IEvents } from "./base/events";
+import { IPaymenOption } from "../types";
+import { paymenOption, Event } from "../utils/constants";
 
+export interface IOrderActions {
+  onClick: (event: MouseEvent) => void;
+};
 
-
-export class OrderDelivery extends Form<IOrder> {
+export class OrderDelivery extends Form<IOrderDeliveryForm> {
   protected _button: HTMLElement;
   protected _buttonCash: HTMLElement;
   protected _buttonCard: HTMLElement;
   protected _currentPaymentBtn: HTMLElement;
 
-  constructor(container: HTMLFormElement, events: IEvents, actions?: ICardActions) {
+  constructor(container: HTMLFormElement, events: IEvents, actions?: IOrderActions) {
     super(container, events);
 
     this._button = this.container.querySelector('.order__button');
@@ -23,16 +24,16 @@ export class OrderDelivery extends Form<IOrder> {
 
     if (actions?.onClick) {
       this._button.addEventListener('click', actions.onClick);
-    }
+    };
 
     this._buttonCash.addEventListener('click', () => {
-      this.events.emit('order:changePayment', ['cash']);
+      this.events.emit(Event.ORDER_UPDATE_PAYMENT, ['cash']);
     });
 
     this._buttonCard.addEventListener('click', () => {
-      this.events.emit('order:changePayment', ['card']);
+      this.events.emit(Event.ORDER_UPDATE_PAYMENT, ['card']);
     });
-  }
+  };
 
   set payment(value: IPaymenOption) {
     if(value === paymenOption.CARD){
@@ -41,33 +42,20 @@ export class OrderDelivery extends Form<IOrder> {
     }else{
       this._buttonCash.classList.add("button_alt-active");
       this._buttonCard?.classList.remove("button_alt-active");
-    }
-  }
-
-  set address(value: string) {
-      (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
-  }
-}
+    };
+  };
+};
 
 
-export class OrderContacts extends Form<IOrder>  {
+export class OrderContacts extends Form<IOrderContactsForm>  {
   protected _button: HTMLElement; 
 
-  constructor(container: HTMLFormElement, events: IEvents, actions?: ICardActions){
+  constructor(container: HTMLFormElement, events: IEvents, actions?: IOrderActions){
     super(container, events);
     this._button = this.container.querySelector('.button');
 
     if (actions?.onClick) {
       this._button.addEventListener('click', actions.onClick);
-    }
-  }
-  
-  set phone(value: string) {
-    (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
-}
-
-  set email(value: string) {
-    (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
-  }
-
-}
+    };
+  };
+};

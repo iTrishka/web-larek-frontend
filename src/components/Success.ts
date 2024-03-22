@@ -3,7 +3,6 @@ import {ensureElement} from "../utils/utils";
 
 interface ISuccess {
     description: number;
-
 }
 
 interface ISuccessActions {
@@ -23,10 +22,10 @@ export class Success extends Component<ISuccess> {
 
         if (actions?.onClick) {
             this._close.addEventListener('click', actions.onClick);
-        }
-    }
+        };
+    };
 
     set description(value: string) {
         this.setText(this._description, `Списано ${value} синапсов`);
     };
-}
+};

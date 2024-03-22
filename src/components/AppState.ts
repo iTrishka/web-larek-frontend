@@ -1,9 +1,17 @@
 import {Model} from "./base/Model";
-import { IAppState, IProductCard, IOrder, FormErrors, IOrderDelivery, IOrderContacts } from "../types";
+import { IProductCard, IOrder, IOrderDeliveryForm, IOrderContactsForm } from "../types";
+import { Event } from "../utils/constants";
+
+export interface IAppState {
+  catalog: IProductCard[];
+  order: IOrder;
+  formErrors: TFormErrors;
+};
+
+export type TFormErrors = Partial<Record<keyof IOrder, string>>;
 
 export class AppState extends Model<IAppState> {
   catalog: IProductCard[];
-  loading: boolean;
   order: IOrder = {
     payment: '',
     address: '',
@@ -12,20 +20,19 @@ export class AppState extends Model<IAppState> {
     total: 0,
     items: []
   };
-  formErrors: FormErrors = {};
+  formErrors: TFormErrors = {};
 
 
   setCatalog(items: IProductCard[]) {
-    console.log("items", items)
     this.catalog = items;
-    this.emitChanges('items:changed', { catalog: this.catalog });
-  }
+    this.emitChanges(Event.ITEMS_CHANGED, { catalog: this.catalog });
+  };
 
   clearBasket() {
     this.catalog.forEach(item => {
         item.inBasket = false;
     });
-  }
+  };
 
   clearOrder() {
     this.order.payment = '';
@@ -34,52 +41,45 @@ export class AppState extends Model<IAppState> {
     this.order.email = '';
     this.order.total = 0;
     this.order.items = [];
-  }
+  };
 
   toggleBasketState(item: IProductCard) {
     if(item.price){ 
       item.inBasket = !item.inBasket
-    } 
-  }
+    };
+  };
 
   getAmountItemInBasket(): number {
     const itemInBasket = this.catalog.filter(item => item.inBasket === true)
     return itemInBasket.length
-  }
+  };
 
   getTotalPrice(): number {
     let sum = 0;
     const itemsInBasket = this.catalog.filter(item => item.inBasket === true)
     sum = itemsInBasket.reduce((a, c) => a + c.price, 0)
     return sum
-  }
+  };
 
-  setOrderDeliveryField(field: keyof IOrderDelivery, value: string) {
+  setOrderDeliveryField(field: "address", value: string) {
     this.order[field] = value;
-    if (this.validateOrderDelivery()) {
-        this.events.emit('order:ready', this.order);
-    }
-  }
+    this.validateOrderDelivery()
+  };
 
-  setOrderContactsField(field: keyof IOrderContacts, value: string) {
+  setOrderContactsField(field: keyof IOrderContactsForm, value: string) {
     this.order[field] = value;
-    if (this.validateOrderContacts()) {
-        this.events.emit('order:ready', this.order);
-    }
-  }
+    this.validateOrderContacts();
+  };
 
   validateOrderDelivery() {
     const errors: typeof this.formErrors = {};
     if (!this.order.address) {
-      errors.phone = 'Необходимо указать адрес';
+      errors.address = 'Необходимо указать адрес';
     }
-    // if (!this.order.payment) {
-    //   errors.phone = 'Необходимо указать способ оплаты';
-    // }
     this.formErrors = errors;
-    this.events.emit('formErrors:change', this.formErrors);
+    this.events.emit(Event.FORM_DELIVERY_ERROR, this.formErrors);
     return Object.keys(errors).length === 0;
-  }
+  };
 
   validateOrderContacts() {
     const errors: typeof this.formErrors = {};
@@ -90,10 +90,7 @@ export class AppState extends Model<IAppState> {
       errors.phone = 'Необходимо указать email';
     }
     this.formErrors = errors;
-    this.events.emit('formContactsErrors:change', this.formErrors);
+    this.events.emit(Event.FORM_CONTACTS_ERROR, this.formErrors);
     return Object.keys(errors).length === 0;
-  }
-
-
-  
-}
+  };
+};
