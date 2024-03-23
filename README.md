@@ -409,4 +409,6 @@ __Методы класса__:
 - отправить заказ на сервер(ORDER_SUBMIT)  
 
 ***
-cпасибо!
+Репозиторий: https://github.com/iTrishka/web-larek-frontend
+
+GitHub Pages: https://itrishka.github.io/web-larek-frontend/
