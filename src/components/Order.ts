@@ -44,6 +44,10 @@ export class OrderDelivery extends Form<IOrderDeliveryForm> {
       this._buttonCard?.classList.remove("button_alt-active");
     };
   };
+  
+  set address(value: string) {
+    (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+  };
 };
 
 
@@ -57,5 +61,13 @@ export class OrderContacts extends Form<IOrderContactsForm>  {
     if (actions?.onClick) {
       this._button.addEventListener('click', actions.onClick);
     };
+  };
+
+  set phone(value: string) {
+    (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
+  };
+
+  set email(value: string) {
+    (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
   };
 };

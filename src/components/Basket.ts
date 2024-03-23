@@ -38,7 +38,7 @@ export class Basket extends Component<IBasketUI> {
         this._button.removeAttribute("disabled")
     } else {
         this._list.replaceChildren(createElement<HTMLParagraphElement>('p', {
-            textContent: 'Добавьте товар'
+            textContent: 'Добавьте товары'
             
         }));
         this.disableButton("true")

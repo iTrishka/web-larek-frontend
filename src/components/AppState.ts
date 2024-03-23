@@ -49,6 +49,10 @@ export class AppState extends Model<IAppState> {
     };
   };
 
+  getItemsInBasket(){
+    return this.catalog.filter(item => item.inBasket === true)
+  };
+
   getAmountItemInBasket(): number {
     const itemInBasket = this.catalog.filter(item => item.inBasket === true)
     return itemInBasket.length
@@ -56,8 +60,7 @@ export class AppState extends Model<IAppState> {
 
   getTotalPrice(): number {
     let sum = 0;
-    const itemsInBasket = this.catalog.filter(item => item.inBasket === true)
-    sum = itemsInBasket.reduce((a, c) => a + c.price, 0)
+    sum = this.getItemsInBasket().reduce((a, c) => a + c.price, 0)
     return sum
   };
 

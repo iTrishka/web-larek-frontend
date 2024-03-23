@@ -185,15 +185,16 @@ interface IAppState {
 Класс описывает состояние приложения.  
 __Методы класса__:    
    - _setCatalog(IProductCard[]): void_ // метод, который записывает список товаров, пришедших с сервера в  AppState.catalog
-   - clearBasket(): void_ // метод переводит параметр inBasket всех товаров в false
-   - clearOrder(): void_ // метод приводит все поля заказа к дефолтному состоянию
-   - toggleBasketState(item: IProductCard): void_ // метод меняет значение свойства inBasket на противоположное - true/false 
-   - getAmountItemInBasket(): void_ // метод расчета количества товаров в корзине
-   - getTotalPrice(): void_ // метод расчета общей стоимости товаров в корзине
-   - setOrderDeliveryField(field: "address", value: string): void_ // метод установки значения свойствв поля заказа из формы доставки
-   - setOrderContactsField(field: keyof IOrderContactsForm, value: string): void_ // метод установки значения свойствв поля заказа из формы контактов
-   - validateOrderDelivery(): void_ // метод валидации полей формы доставки
-   - validateOrderContacts(): void_ // метод валидации полей формы контактов
+   - _clearBasket(): void_ // метод переводит параметр inBasket всех товаров в false
+   - _clearOrder(): void_ // метод приводит все поля заказа к дефолтному состоянию
+   - _toggleBasketState(item: IProductCard): void_ // метод меняет значение свойства inBasket на противоположное - true/false  
+   - _getItemsInBasket(): IProductCard[]_ // метод ищет и отдает все товары, которые добавили в корзину по свойству inBasket  
+   - _getAmountItemInBasket(): void_ // метод расчета количества товаров в корзине
+   - _getTotalPrice(): void_ // метод расчета общей стоимости товаров в корзине
+   - _setOrderDeliveryField(field: "address", value: string): void_ // метод установки значения свойствв поля заказа из формы доставки
+   - _setOrderContactsField(field: keyof IOrderContactsForm, value: string): void_ // метод установки значения свойствв поля заказа из формы контактов
+   - _validateOrderDelivery(): void_ // метод валидации полей формы доставки
+   - _validateOrderContacts(): void_ // метод валидации полей формы контактов
 
 ### Слой Presenter  
 
@@ -253,7 +254,7 @@ __Методы класса__:
    - _set locked(boolean):void_ // блокировка скролла
 
 4. #### **Класс Card extends Component<ICardUI> **  
-  Класс для отображения карточки товара.  
+   Класс для отображения карточки товара.  
    ~~~
    interface ICardUI {
       title: string;
@@ -272,10 +273,10 @@ __Методы класса__:
    - _set category_ // установить категорию товара   
    - _set price_ // установить цену товара  
 
-6. #### **Класс CatalogItem extends Card**     
+5. #### **Класс CatalogItem extends Card**     
    Элемент галереи. Добавляется обработка клика  
 
-7. #### **Класс PreviewCard extends Card**     
+6. #### **Класс PreviewCard extends Card**     
    Элемент галереи. Добавляется обработка клика и описание товара 
    ~~~
    interface IPreviewCardUI extends ICardUI {
@@ -286,11 +287,11 @@ __Методы класса__:
    - _schangeButton_ // смена текста на кнопке в зависимости от того, в корзине товар или нет  
    - _set price_ // отрисовка цены на карточке или установка текста Бесплатно  
 
-8. #### **Класс BasketCard extends Card *     
+7. #### **Класс BasketCard extends Card *     
    Элемент товара в корзине. Добавляется обработка клика.  
 
 
-9. #### **Класс Basket extends Component<IBasketUI>**   
+8. #### **Класс Basket extends Component<IBasketUI>**   
    ~~~
    type IBasketUI= {
       items: HTMLElement[] | [];
@@ -305,11 +306,21 @@ __Методы класса__:
    - _set items_ // отрисовка товаров в корзине 
    - _set total_ // отрисовка общей цены товара   
 
+9. #### **Класс OrderDelivery extends Form<IOrderDeliveryForm> **    
+    __Конструктор:__:  
+   Принимает container: container: HTMLFormElement, events: IEvents, actions?: IOrderActions
+    __Методы класса__:  
+   - _ set payment_ // отрисовка выбора оплаыт
+   - _set address_ // отрисовка значений address
+
 10. #### **Класс OrderContacts extends Form<IOrderContactsForm> **    
     __Конструктор:__:  
    Принимает container: Hcontainer: HTMLFormElement, events: IEvents, actions?: IOrderActions  
+    __Методы класса__:  
+   - _set phone_ // отрисовка значений phone
+   - _set email_ // отрисовка значений email
 
-9. #### **Класс Success extends Component<ISuccess>**   
+11. #### **Класс Success extends Component<ISuccess>**   
    ~~~
    interface ISuccess {
       description: number;
@@ -395,7 +406,7 @@ __Методы класса__:
 Событие возникает при клике на кнопку Оплатить в форме форме контактов
 Действия:  
 - записать в заказ id товаров и общую сумму товаров из корзины (ORDER_UPDATE_ITEMS_TOTAL)
-- отправить заказ на сервер(RDER_SUBMIT)  
+- отправить заказ на сервер(ORDER_SUBMIT)  
 
 ***
 cпасибо!

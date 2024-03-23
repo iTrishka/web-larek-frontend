@@ -17,7 +17,6 @@ import { IProductCard, IOrderResponse, IOrderDeliveryForm, IOrderContactsForm, I
 const events = new EventEmitter();
 const api = new WebLarekAPI(API_URL, CDN_URL);
 
-
 // Все шаблоны
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
@@ -27,15 +26,12 @@ const formOrderDeliveryTemplate = ensureElement<HTMLTemplateElement>('#order');
 const formOrderContactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
-
 // Модель данных приложения
 const appData = new AppState({}, events);
-
 
 // Глобальные контейнеры
 const page = new Page(document.body, events);
 const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
-
 
 // Переиспользуемые части интерфейса
 const basket = new Basket(cloneTemplate(basketTemplate), events);
@@ -110,8 +106,7 @@ events.on(Event.BASKET_UPDATE, (item: IProductCard )=> {
 
 //Открыть корзину
 events.on(Event.BASKET_OPEN, () => {
-  const itemsInBasket = appData.catalog.filter(item => item.inBasket === true)
-  const items = itemsInBasket.map(card => {
+  const items = appData.getItemsInBasket().map(card => {
     const cardBasket = new BasketCard(cloneTemplate(cardBasketTemplate), {
       onClick: () => {
         events.emit(Event.BASKET_UPDATE, card);
@@ -122,7 +117,7 @@ events.on(Event.BASKET_OPEN, () => {
       title: card.title,
       price: card.price
     })
-  })
+  });
   modal.render({
     content: basket.render({
       items: items,
@@ -133,12 +128,11 @@ events.on(Event.BASKET_OPEN, () => {
 
 //Заказ: добавить товары и итоговую стомость в заказ
 events.on(Event.ORDER_UPDATE_ITEMS_TOTAL, () => {
-  const itemsInBasket = appData.catalog.filter(item => item.inBasket === true)
-  itemsInBasket.map(item => {
+  appData.getItemsInBasket().map(item => {
     appData.order.items.push(item.id)
   })
   appData.order.total = appData.getTotalPrice();
-})
+});
 
 //Заказ: открываем окно с формой доставки
 events.on(Event.FORM_DELIVERY_OPEN,() => {
@@ -150,8 +144,8 @@ events.on(Event.FORM_DELIVERY_OPEN,() => {
       valid: false,
       errors: []
     })
+  });
 });
-})
 
 //Заказ: добавить способ оплаты в заказ
 events.on(Event.ORDER_UPDATE_PAYMENT, (data: Array<string>) => {
@@ -161,8 +155,8 @@ events.on(Event.ORDER_UPDATE_PAYMENT, (data: Array<string>) => {
   } else {
     appData.order.payment = paymenOption.CARD
     orderDelivery.payment = paymenOption.CARD
-  }
-}) 
+  };
+}); 
 
 // Изменилось состояние валидации формы
 events.on(Event.FORM_DELIVERY_ERROR, (errors: Partial<IOrderDeliveryForm>) => {
@@ -186,7 +180,7 @@ events.on(Event.FORM_CONTACTS_OPEN,() => {
       errors: []
     })
   });
-})
+});
 
 // Изменилось состояние валидации формы
 events.on(Event.FORM_CONTACTS_ERROR, (errors: Partial<IOrderContactsForm>) => {
